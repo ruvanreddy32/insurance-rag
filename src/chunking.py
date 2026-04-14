@@ -1,7 +1,7 @@
 from langchain_text_splitters import RecursiveCharacterTextSplitter , SpacyTextSplitter
 from typing import List
 from langchain_core.documents import Document
-from sentence_transformers import SentenceTransformer
+
 
 
 
@@ -21,8 +21,3 @@ def split_docs_by_spacy(docs:List[Document]):
     return chunks
 
 
-def embed_chunks(chunks):
-    embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
-    embeddings=embedding_model.encode(chunks)
-    print(embeddings.shape)
-    return embeddings
