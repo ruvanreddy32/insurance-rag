@@ -1,26 +1,35 @@
-from pypdf import PdfReader
-
+from langchain_community.document_loaders import PyMuPDFLoader
+from langchain_core.documents import Document
 
 def load_pdfs(data_urls):
-    documents=[]
+    pages=[]
     for urls in data_urls:
-        reader = PdfReader(urls)
-        print(reader.pages[0].extract_text())
+        loader = PyMuPDFLoader(urls)
+        reader= loader.load()
 
-        for page_num,page in enumerate(reader.pages):
-            text = page.extract_text()
-
+        for page in reader:
+            text = page.page_content
             if text:
-                documents.append({
+                pages.append({
                     "text" : text,
-                    "page_num":page_num,
+                    "page_num":page.metadata['page']+1,
                     "document":urls
                 })
-    return documents
+    return pages
+
+def load_documents(pages):
+    docs=[]
+    for page in pages:
+        doc = Document(
+            page_content=page["text"],
+            metadata={
+                "source":page['document'],
+                "page_num":page["page_num"]
+            }
+
+        )
+        docs.append(doc)
+    return docs
 
 
-data_urls = ["data/icici-health.pdf","data/lic-life.pdf"]
-
-documents = load_pdfs(data_urls)
-print("Loaded ",len(documents),"documents")
 
