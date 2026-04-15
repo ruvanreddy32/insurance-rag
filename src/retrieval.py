@@ -57,7 +57,3 @@ def retrieve_chunks(query,k=5):
         })
 
     return retrieved
-
-results = retrieve_chunks("What is waiting period in lic docs?")
-
-print(results)
